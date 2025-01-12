@@ -4,7 +4,7 @@ const app = express()
 app.get('/', (req, res) => {
   res.send(`
     <h1>Hello World from Bosnia/Tuzla!</h1>
-    <p>Welcome to my Express.js application.</p>
+    <p>Learning DevOps with Docker from mooc.fi</p>
   `);
 })
 

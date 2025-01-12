@@ -6,7 +6,7 @@ on:
     branches:
       - main
 
-# Job definition
+# Jobs definition
 jobs:
   publish-docker-hub:
     name: Publish image to Docker Hub
@@ -30,3 +30,31 @@ jobs:
           push: true
           tags: benjaminsuljic82/express-app:latest
 
+  deploy-to-vps:
+    name: Deploy to Contabo VPS
+    runs-on: ubuntu-latest
+    needs: publish-docker-hub
+    steps:
+      # Setup SSH agent
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.5.4
+        with:
+          ssh-private-key: ${{ secrets.DEPLOY_SSH_KEY_CONTABO }}
+
+      # Deploy the container to VPS
+      - name: Deploy Docker Container
+        run: |
+          ssh -o StrictHostKeyChecking=no root@75.119.156.74 << 'EOF'
+            # Pull the latest Docker image
+            docker pull benjaminsuljic82/express-app:latest
+
+            # Stop the existing container
+            docker stop express-app || true
+            docker rm express-app || true
+
+            # Run the updated container
+            docker run -d \
+              --name express-app \
+              -p 8080:8080 \
+              benjaminsuljic82/express-app:latest
+          EOF

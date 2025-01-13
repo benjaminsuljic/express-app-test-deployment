@@ -3,7 +3,7 @@ const app = express()
 
 app.get('/', (req, res) => {
   res.send(`
-    <h1>Hello World from Bosnia/Tuzla!</h1>
+    <h1>Hello World from Salt Square!</h1>
     <p>Learning DevOps with Docker from mooc.fi</p>
   `);
 })
